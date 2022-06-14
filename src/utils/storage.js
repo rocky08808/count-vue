@@ -57,3 +57,20 @@ export const delData = (formKey, id) => {
         }
     }
 }
+
+const poolName = 'pool'
+export const getPool = () => (getLS(poolName) || {})
+
+export const setPool = (level, value) => {
+    const pool = getPool()
+    pool[level] = value
+    setLS(poolName, pool)
+}
+
+export const delPool = level => {
+    const pool = getPool()
+    if (pool[level]) {
+        delete pool[level]
+        setLS(poolName, pool)
+    }
+}

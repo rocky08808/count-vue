@@ -20,6 +20,8 @@
       <van-button type="primary" size="small" block @click="handleAdd">新增记录</van-button>
       <br>
       <van-button type="warning" size="small" block @click="handleShowMonth">查看月收益</van-button>
+      <br>
+      <van-button type="danger" size="small" block @click="handleCheckPool">资金池</van-button>
     </div>
     <van-popup ref="showMonth" v-model="showMonth" position="bottom">
       <van-field label="年份" v-model="year"></van-field>
@@ -51,14 +53,31 @@
         </div>
       </van-form>
     </van-popup>
+    <van-popup ref="pool" v-model="showPool" position="bottom">
+      <CTable :columns="poolColumns" :data="poolList"></CTable>
+      <br />
+      <div class="mar16">
+        <van-button round block type="primary" size="small" @click="handleAddPool">新增</van-button>
+      </div>
+    </van-popup>
+    <van-dialog v-model="addPoolShow" title="等级" showCancelButton @confirm="handleAddPoolSubmit">
+      <van-form>
+        <van-field label="等级" v-model="addPoolForm.level" type="number" placeholder="等级"></van-field>
+        <van-field label="资金池" v-model="addPoolForm.pool" type="number" placeholder="资金池"></van-field>
+        <!-- <div class="mar16">
+          <van-button round block type="primary" size="small" native-type="submit">确定</van-button>
+        </div> -->
+      </van-form>
+    </van-dialog>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import moment from 'moment'
+import { Toast, Dialog  } from 'vant'
 import CTable from '@/components/Table.vue'
-import { setLS, getLS, getData, setData, delData, formsName } from '@/utils/storage'
+import { setLS, getLS, getData, setData, delData, formsName, setPool, getPool, delPool } from '@/utils/storage'
 
 export default {
   name: 'Home',
@@ -99,8 +118,23 @@ export default {
         } },
         { label: '日志', prop: 'log' },
       ],
+      poolColumns: [
+        { label: '等级', prop: 'level' },
+        { label: '资金池', prop: 'pool' },
+        { label: '操作', render: (h, row) => {
+          return h('div', [
+            h('span', { on: { click: () => this.handleEditPool(row) } }, ' 编辑 '),
+            h('span', { on: { click: () => this.handlePoolDel(row) } }, ' 删除 ')
+          ])
+        } }
+      ],
       tableList: [],
       monthList: [],
+      poolList: [],
+      addPoolForm: {
+        level: '',
+        pool: ''
+      },
       currentDate: new Date(),
       addData: {
         date: new Date(),
@@ -111,6 +145,8 @@ export default {
       username: '',
       showAdd: false,
       showMonth: false,
+      showPool: false,
+      addPoolShow: false,
       year: new Date().getFullYear(),
       totalOther: 0,
       totalIncome: 0,
@@ -133,6 +169,52 @@ export default {
     }
   },
   methods: {
+    handleEditPool({ level, pool }) {
+      this.addPoolForm.level = level
+      this.addPoolForm.pool = pool
+      this.addPoolShow = true
+    },
+    handlePoolDel({ level }) {
+      Dialog.confirm({
+        title: '删除',
+        message: '删除该等级 ？'
+      }).then(() => {
+        delPool(level)
+        Toast('删除成功')
+        this.getPoolData()
+      })
+    },
+    handleCheckPool() {
+      this.showPool = true
+      this.getPoolData()
+    },
+    handleAddPool() {
+      this.addPoolForm.level = ''
+      this.addPoolForm.pool = ''
+      this.addPoolShow = true
+    },
+    handleAddPoolSubmit() {
+      const { level, pool } = this.addPoolForm
+      if (!level) return Toast('请输入等级')
+      if (!pool) return Toast('请输入资金池')
+      setPool(level, pool)
+      Toast('操作成功')
+      this.addPoolShow = false
+      this.getPoolData()
+    },
+    getPoolData() {
+      const pool = getPool()
+      if (pool) {
+        const list = []
+        for(let level in pool) {
+          const val = pool[level]
+          if (level) {
+            list.push({ level, pool: val })
+          }
+        }
+        this.poolList = list
+      }
+    },
     handleDel(item) {
       this.$dialog.confirm({
         title: '确认',
