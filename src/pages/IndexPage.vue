@@ -157,7 +157,7 @@ const initEcharts = () => {
         text: "In"
       },
       xAxis: {
-        data: dd.map(i => i.date)
+        data: dd.map(i => i.date.slice(8))
       },
       yAxis: {},
       series: [
