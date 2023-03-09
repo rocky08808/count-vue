@@ -5,8 +5,9 @@ const routes = [
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
       { path: 'month', component: () => import('pages/month/index.vue') },
+      { path: 'year', component: () => import('pages/year/index.vue') },
       { path: 'download', component: () => import('pages/download/index.vue') },
-      { path: 'clearcache', component: () => import('pages/clearcache/index.vue') },
+      { path: 'clearcache', component: () => import ('pages/clearcache/index.vue') },
     ],
   },
 
