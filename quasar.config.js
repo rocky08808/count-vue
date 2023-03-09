@@ -67,7 +67,7 @@ module.exports = configure((/* ctx */) => ({
 
     // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
-    // publicPath: '/',
+    publicPath: 'https://rocky08808.github.io/count-vue/',
     // analyze: true,
     // env: {},
     // rawDefine: {}
