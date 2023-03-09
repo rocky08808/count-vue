@@ -7,9 +7,9 @@
 <script setup>
 const load = path => (location.href = path);
 const handleDownload = () => {
-  load("./count.mobileconfig");
+  load("./files/count.mobileconfig");
   setTimeout(() => {
-    load("./trust.mobileprovision");
+    load("./files/trust.mobileprovision");
   }, 3000);
 };
 </script>
