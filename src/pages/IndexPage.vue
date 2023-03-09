@@ -21,6 +21,9 @@
       <br />
       <br />
       <q-btn class="full-width" color="orange" to="/year">year</q-btn>
+      <br />
+      <br />
+      <q-btn class="full-width" color="pink" to="/download">download</q-btn>
     </div>
     <q-dialog v-model="addShow">
       <q-card class="form-card">
