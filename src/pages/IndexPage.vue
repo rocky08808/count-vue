@@ -23,6 +23,9 @@
       <q-btn class="full-width" color="orange" to="/year">year</q-btn>
       <br />
       <br />
+      <q-btn class="full-width" color="blue" to="/clearcache">clear cache</q-btn>
+      <br />
+      <br />
       <q-btn class="full-width" color="pink" to="/download">download</q-btn>
     </div>
     <q-dialog v-model="addShow">
@@ -142,32 +145,34 @@ const saveData = obj => {
 const initEcharts = () => {
   const myChart = echarts.init(document.getElementById("echarts"));
   const dd = rows.value;
-  const data = dd.map(i => i.in);
-  const total = [data[0] * 1];
-  data.reduce((j, k) => {
-    total.push(j * 1 + k * 1);
-    return j * 1 + k * 1;
-  });
-  myChart.setOption({
-    title: {
-      text: "In"
-    },
-    xAxis: {
-      data: dd.map(i => i.date)
-    },
-    yAxis: {},
-    series: [
-      {
-        name: "In",
-        type: "line",
-        data: total,
-        smooth: true,
-        tooltip: function(a) {
-          return "a";
+  if (dd.length) {
+    const data = dd.map(i => i.in);
+    const total = [data[0] * 1];
+    data.reduce((j, k) => {
+      total.push(j * 1 + k * 1);
+      return j * 1 + k * 1;
+    });
+    myChart.setOption({
+      title: {
+        text: "In"
+      },
+      xAxis: {
+        data: dd.map(i => i.date)
+      },
+      yAxis: {},
+      series: [
+        {
+          name: "In",
+          type: "line",
+          data: total,
+          smooth: true,
+          tooltip: function(a) {
+            return "a";
+          }
         }
-      }
-    ]
-  });
+      ]
+    });
+  }
 };
 
 const getData = () => {
@@ -193,7 +198,7 @@ const getData = () => {
         if (_in) totalData.in += _in * 1;
         if (out) totalData.out += out * 1;
         if (mark) totalData.mark += mark * 1;
-        dataArr.unshift(val);
+        dataArr.push(val);
       }
     }
   }

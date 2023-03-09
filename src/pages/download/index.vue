@@ -1,6 +1,6 @@
 <template>
   <div class="download">
-    <q-btn color="teal" @click="handleDownload">ios</q-btn>
+    <q-btn class="full-width" color="teal" @click="handleDownload">ios</q-btn>
   </div>
 </template>
 
