@@ -192,13 +192,16 @@ const getData = () => {
 
     if (data[year] && data[year][month]) {
       const obj = data[year][month];
-      for (let key in obj) {
-        const val = obj[key];
-        const { in: _in, out, mark } = val;
-        if (_in) totalData.in += _in * 1;
-        if (out) totalData.out += out * 1;
-        if (mark) totalData.mark += mark * 1;
-        dataArr.push(val);
+      const zero = num => (num < 10 ? `0${num}` : `${num}`);
+      for (let k = 0; k < 31; k++) {
+        const val = obj[zero(k + 1)];
+        if (val) {
+          const { in: _in, out, mark } = val;
+          if (_in) totalData.in += _in * 1;
+          if (out) totalData.out += out * 1;
+          if (mark) totalData.mark += mark * 1;
+          dataArr.push(val);
+        }
       }
     }
   }
