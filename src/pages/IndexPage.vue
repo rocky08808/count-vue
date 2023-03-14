@@ -74,7 +74,8 @@ const columns = ref([
   {
     field: "in",
     align: "center",
-    label: "In"
+    label: "In",
+    style: row => `color: ${row.in * 1 > 0 ? "red" : "green"}`
   },
   {
     field: "out",
