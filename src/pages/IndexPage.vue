@@ -59,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import moment from "moment";
 
 import * as echarts from "echarts";
@@ -101,6 +101,7 @@ const totalRow = ref({});
 const currentRow = ref({});
 const addShow = ref(false);
 const delConfirm = ref(false);
+const myChart = ref(null);
 
 const dataKey = "data";
 
@@ -144,36 +145,36 @@ const saveData = obj => {
 };
 
 const initEcharts = () => {
-  const myChart = echarts.init(document.getElementById("echarts"));
+  if (!myChart.value) {
+    myChart.value = echarts.init(document.getElementById("echarts"));
+  }
+
   const dd = rows.value;
-  if (dd.length) {
-    const data = dd.map(i => i.in);
-    const total = [data[0] * 1];
+  const data = dd.map(i => i.in);
+  const len = data.length;
+  const total = len ? [data[0] * 1] : [];
+  len &&
     data.reduce((j, k) => {
       total.push(j * 1 + k * 1);
       return j * 1 + k * 1;
     });
-    myChart.setOption({
-      title: {
-        text: "In"
-      },
-      xAxis: {
-        data: dd.map(i => i.date.slice(8))
-      },
-      yAxis: {},
-      series: [
-        {
-          name: "In",
-          type: "line",
-          data: total,
-          smooth: true,
-          tooltip: function(a) {
-            return "a";
-          }
-        }
-      ]
-    });
-  }
+  myChart.value.setOption({
+    title: {
+      text: "In"
+    },
+    xAxis: {
+      data: dd.map(i => i.date.slice(8))
+    },
+    yAxis: {},
+    series: [
+      {
+        name: "In",
+        type: "line",
+        data: total,
+        smooth: true
+      }
+    ]
+  });
 };
 
 const getData = () => {
@@ -239,6 +240,10 @@ const handleDelete = () => {
   getData();
   delConfirm.value = false;
 };
+
+watch(checkDate, () => {
+  getData();
+});
 
 onMounted(() => {
   getData();

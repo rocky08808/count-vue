@@ -24,6 +24,6 @@ const emits = defineEmits(["update:modelValue"]);
 const date = ref(props.modelValue);
 
 watch(date, () => {
-  emits("update:modelValue", date);
+  emits("update:modelValue", date.value);
 });
 </script>
